@@ -1,0 +1,710 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Android Security</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+}
+
+.simple-table-header {
+	background: rgb(247, 246, 243);
+	color: black;
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="7f2678f5-fc80-45d6-bec9-4c8224fa9e52" class="page sans"><header><h1 class="page-title">Android Security</h1></header><div class="page-body"><p id="8b39d3f3-a83f-4a93-9622-be92f506954f" class="">Getting your device locked down tight isn’t a five minute job. So we’re starting with fast and easy stuff. We’ve also tried to put the steps in a logical order where possible.</p><p id="31acfcae-9f14-410f-b17f-fc62ecac220e" class="">This way, even if you only have five minutes to spend right now, you can improve your privacy and security on Android in a few simple steps. Whenever you have some time, come back to this post and complete the next steps. Completing all the steps is the goal, but every step you complete adds to your online security and privacy.</p><p id="c6ad6aea-1e97-4401-a47c-151d29a7c7e3" class="">Here are the steps to take, in order:</p><p id="8ce0f535-b02e-4599-80ce-1bff72dc042a" class="">1. Set a screen lock
+2. Use those Privacy settings
+    ◦ Permission manager
+    ◦ Send diagnostic data
+    ◦ Autofill with Google
+    ◦ Shut down Location History
+    ◦ Reduce snooping with Activity Controls
+    ◦ Put an end to Ad personalization
+    ◦ Usage &amp; diagnostics</p><p id="b47e6ce1-61b3-4fff-8c72-ceec8f71484c" class="">
+3. Eliminate excess
+    ◦ Delete excess apps from your device
+    ◦ Deny apps excess permissions
+    ◦ End excess cloud syncing
+4. Install security apps
+5. Make privacy-friendly apps your default apps
+    ◦ Block ads, tracking, and malware
+    ◦ Download apps from safe sources
+6. Maintain security by doing these things
+    ◦ Keep notifications off the lock screen
+    ◦ Minimize the number of new apps you install
+    ◦ Check app permissions before installing
+    ◦ Update your software
+    ◦ Stay out of bad neighborhoods
+    ◦ Use a good VPN service
+    ◦ Use a secure messenger</p><p id="6ee5cb0b-b0a3-4e28-95e3-87f569d8e771" class="">We’ll also touch on replacing Android with a version that doesn’t report everything you do to Google, for the ultimate boost in security and privacy.</p><p id="d772aabe-f438-46e0-9e3e-dc46f6adda76" class=""><strong>Note: </strong>For this guide, I used a Samsung S9+ running Android 10. The instructions you see here should more or less apply to your device. However, each new version of Android varies, particularly where specific settings are found. And each device manufacturer makes their own tweaks to the operating system. The upshot of all this is that we can almost guarantee that some screens will look different on your device, and some settings will be located in different places. But we’ll keep this guide updated with best practices now and for future versions of Android.</p><h2 id="f3eb6850-a5dd-4a75-a138-812ff3f64ec0" class="">1. Set a screen lock</h2><p id="7ca9d742-820b-47b0-b024-a1216768cefb" class="">If you haven’t already done so, setting a screen lock is the fastest and easiest way to boost the security of your Android device. While we haven’t seen any recent studies on the subject, it appears that there are still a lot of folks out there who don’t bother to lock their Android devices at all. If this describes you, realize that anyone getting their hands on your device will have complete access to all that good bank account data, and all your photos, documents, and more. Why not take the plunge and set up a screen lock?</p><p id="ff2fe746-a06b-43fd-8fef-a50fab19d618" class="">Follow these steps to set a screen lock:</p><p id="2404afdb-f61d-47c6-8ab7-441f1ea96f09" class="">1. Open <strong>Settings</strong> on your device.
+2. Tap <strong>Privacy</strong>.
+3. Tap <strong>Lock Screen</strong>.
+4. Tap <strong>Screen Lock Type</strong>.
+5. Select one of the screen lock types offered by your device. Android helpfully classifies each option by the level of security it provides:
+6. While using one of the biometric options is much more fun, we recommend you go with the old-fashioned <em>PIN</em> or <em>Password</em> options. Why? No matter what option you use to lock your device, data for that option ends up stored somewhere. And if data is stored somewhere, it could potentially get stolen. If the worst happens and your PIN or Password get stolen, you can easily change them. What are you going to do if your fingerprint or Iris scan get stolen?</p><figure id="84216373-30d8-4e79-83ae-dafc06bb152d" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-screen-lock-type-full-498x1024.png"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-screen-lock-type-full-498x1024.png"/></a></figure><p id="9ccc3e33-f1f7-475b-82a3-dc4ab86a9087" class="">You’ve made your Android device much more secure in a matter of seconds. Now just make sure you don’t forget your PIN or Password!</p><h2 id="bae7efe2-6880-4af3-a61b-8169d6a1004a" class="">2. Use those Privacy settings</h2><p id="4669868a-47ca-422c-97a6-a31eb4c0fb30" class="">Android devices give you various ways to improve your privacy. But finding them has typically been a headache, as the options were scattered throughout the system. In Android 10, Google partially addressed that problem by putting a number of its main privacy settings together. Not surprisingly, you get access to them in the Privacy section of Settings.</p><p id="2a8d1643-78a6-486b-8d01-456729087181" class="">Unfortunately, this still isn’t an all-in-one control center for privacy-related settings. For example, the <strong>Autofill service</strong> from Google option doesn’t actually let you turn Autofill on or off. It simply shows you what Autofill data Google has stored in your account. You’ll have to go to a different location to control Autofill. Further complicating things, not all the settings are available on all devices, and versions of Android earlier than 10 don’t include this section at all.</p><p id="fbacf92b-88f8-4809-9f29-e5626d663b17" class="">That all said, what we are going to do is look at the Privacy settings available on my Samsung S9+, and show you how to adjust them for maximum privacy. From each setting’s starting point here, we’ll be jumping all over the place, but such is the state of privacy settings on even the newest Android devices.</p><p id="40709953-2e47-499a-9789-14649d2e73d3" class="">We’re going to be coming back here a lot over the next few sections, so memorize these steps to return to the <em>Privacy</em> settings:</p><p id="878a0721-9a1d-4a4d-bea3-ae05ceb6addc" class="">1. Open <strong>Settings</strong>.
+2. Tap <strong>Privacy</strong>.</p><p id="679b79e5-3485-4b56-b913-c7b39067987e" class="">You’ll be doing it in your sleep before we are done.</p><p id="16745868-ef22-48ea-83fe-ec9fa430d16b" class="">Here we go.</p><figure id="d37888f8-a52c-4296-a823-32d658c9611c" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-privacy-settings-498x1024.png"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-privacy-settings-498x1024.png"/></a></figure><h3 id="9a0d8ba5-50a8-4751-ae12-8ee6796b8baf" class="">Permission manager</h3><p id="4eec6bc4-ad6d-412a-a23d-a6e5a14d0326" class="">Android apps often need access to specific aspects of your device or the operating system. For example, the Voice Recorder needs access to the device’s microphone. This only makes sense.</p><p id="755cb90e-1383-4b6b-820b-89bd9e7b4ed6" class="">But things can get murky fast. For example, did you know that many third-party flashlight apps request access to things like your location and contacts? Why, exactly, does a flashlight app need access to either of those things? Answer: It doesn’t, but selling your location data to advertisers can be profitable. (We’ll address this more below.)</p><p id="23a184aa-b114-4bf4-83bd-79faec6997a3" class="">Even in less-dubious situations, you might want the ability to disable certain permissions. Say you use Skype, but only for text massages. Does Skype really need access to your microphone in this case?</p><p id="0273a777-35d3-4210-afd8-b4a1e0062491" class="">Then there are automatic permissions. Google has decided that some permissions are so essential that every app is granted them automatically. In particular, all apps are granted Internet access automatically. If you look through the <em>Permissions</em> settings, you will notice that there isn’t even an option to see which apps have Internet access, much less to deny that permission.</p><p id="be93c5cd-5da1-4fab-bace-804ca31ae6d0" class="">This makes it all the more critical to eliminate unneeded app permissions wherever possible. That new game you installed might be guaranteed access to the Internet for sending and receiving messages, but if you deny it access to any critical data you can at least minimize the risk that it will send your personal information to some hacker in who-knows-where. Turning off permissions like this just makes sense from the privacy perspective. Android now gives you the option to enable and disable app permissions all in one place, the <em>Permission manager.</em></p><figure id="b8746218-5f55-494f-a6f5-25c854481b58" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-permission-manager-498x1024.png"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-permission-manager-498x1024.png"/></a></figure><p id="53a4e8eb-18ea-49ba-9054-048a7d412ca1" class="">Tap one of the options here and you will see which apps have permission to use that particular option and which do not. Tap an app’s name and you can change its permission for that particular option.</p><p id="fbeb2058-c605-4376-ad3e-464c9fc1288a" class="">Examining the permissions that apps have on your device can be enlightening. For example, when I tap <strong>Calendar</strong>, I see that three apps have permission to look at my Calendar data. The Android Auto app, Calendar app, and Email app have permission to do so right now. The Calendar app makes sense to me. But I don’t use the default email app, so why should it have permission to see my Calendar data? Likewise, Android Auto is a car navigation app. I’m not sure why it would need access to my Calendar data.</p><p id="04266854-e924-4baf-a15d-5024487f17b7" class="">Given that background, here are the steps to control app permissions:</p><ol type="1" id="026aa300-3124-42ca-a9ef-6dceac54f80e" class="numbered-list" start="1"><li>Go to the <em>Privacy</em> settings, then tap <strong>Permission manager</strong>. You can now see each option, along with how many apps are allowed access to them out of how many have requested access. In this example, three apps out of 11 have permission to see my Calendar data.<figure id="8f2e7dc6-0648-4ccf-b072-715677e4de69" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-calendar-permissions-300x117.png"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-calendar-permissions-300x117.png"/></a></figure></li></ol><ol type="1" id="54564489-c530-47a9-b487-70a589e04ee3" class="numbered-list" start="2"><li>Tapping <strong>Calendar</strong> shows me exactly which apps do and don’t have access to this data.</li></ol><ol type="1" id="d378491e-5c22-4194-9a8d-4bb18c521e2e" class="numbered-list" start="3"><li>Tapping Email (one of the apps I do <strong>not</strong> want to have access to this data allows me to set the permission:<figure id="7ea69a8c-62e8-49fd-bf71-29d475a5b5f2" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/setting-android-app-permissions-233x300.png"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/setting-android-app-permissions-233x300.png"/></a></figure></li></ol><ol type="1" id="671afff6-5d69-4d75-84f6-36ec36005cd4" class="numbered-list" start="4"><li>I can choose to set the Email apps access to the Calendar data here. Depending on what you decide to do, Android may warn you about some negative impact of the change you are about to make. You’ll have to decide whether or not to heed that warning.</li></ol><p id="8b3e0f6a-2576-4dc3-a88f-48d6090c9460" class="">It is worth looking through all the options at least once to see if there are any apps with permissions you don’t want them to have. You might be surprised what you see.</p><p id="ea791f9d-3a97-42dd-ac0a-eeccaea4f169" class=""><strong>Note:</strong> As you can see in the preceding image, you may see a link that will let you see the status of all the permissions the current app has requested. This can be particularly useful after adding a new app as it gives you a quick way to check the permissions your new app has.</p><h3 id="68727173-7f53-475f-a8a5-d3a5ce110416" class="">Send diagnostic data</h3><p id="ffb74008-fc65-400f-be78-e4ee2c837058" class="">The next thing you might see on the Privacy settings screen is an option to send diagnostic data to the phone manufacturer. Tapping this option pops up a message explaining why you should let your device send unspecified types and amounts of data to the phone manufacturer for, “improving our products and services.” As the saying goes, just say NO. Sending this data to the manufacturer is optional, so say no to this voluntary privacy leak. Here’s how:</p><ol type="1" id="c7c80960-229e-42e1-95ac-e289e29d1f28" class="numbered-list" start="1"><li>Go to the <em>Privacy</em> settings, and look for a <strong>Send diagnostic data</strong> option.</li></ol><ol type="1" id="8a6fe2a4-21a3-4fa6-94b0-a9a285580d12" class="numbered-list" start="2"><li>Make sure that the slider for this is set to <strong>Off</strong>.</li></ol><p id="2604e961-cd9e-440c-b4b0-bce47e102669" class="">That’s it. Super simple.</p><h3 id="535dc3da-3f9a-41dd-84f4-1b69a733124c" class="">Advanced settings</h3><p id="dc3521bc-9d26-4072-873b-2925c90ddcc2" class="">There are a number of “advanced” privacy settings you can control as well. These may be visible on the Privacy settings screen, or you may need to tap <strong>Advanced</strong> to see them.</p><h3 id="ce723862-de10-4480-824f-88f199de974a" class="">Autofill with Google</h3><p id="557935a1-ee45-478d-8203-b60fdae492ec" class="">If you save things like credit card data on your Android device, that data ends up stored in your main Google account. <em>Autofill with Google</em> (this setting may also be called <em>Autofill service from Google</em>) lets you see what data you have stored in your Google account, and delete it if you wish. If you must store your personal data online, there are much better ways of doing it. So let’s see how you can delete any such data you have stored with Google:</p><ol type="1" id="d5b8a082-9ffe-47b8-a33a-2fcfc5d15cb2" class="numbered-list" start="1"><li>Go to the <em>Privacy</em> settings, and tap <strong>Autofill with Google</strong>. You’ll see a screen something like this:<figure id="62fcac34-cd72-4f1b-9b9d-6d8159994d5f" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-privacy-settings-.jpg"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-privacy-settings-.jpg"/></a></figure></li></ol><ol type="1" id="012ea731-168a-416f-a0ba-6c1d44cbe9da" class="numbered-list" start="2"><li>Tap each of the options to see what data Google has stored under it. You will need to look around a bit in each area to find out how to edit or delete the data that Google has. You may be shocked at how much there is. I was.</li></ol><p id="7961abe1-02d0-45d1-8c58-dd872a49a73e" class="">For now we will keep working on the Privacy settings. Later in this post, we’ll talk about a better way to keep all the personal information you want stored securely online where you can easily access it but no one else (including Google) has access to it.</p><h3 id="26956580-7a12-44ab-9a2c-8e106ef3a950" class="">Shut down Location History</h3><p id="747797be-e246-49a7-ba78-875be7645be0" class="">Android devices are constantly trying to figure out where they are in the world. Even if you aren’t using any services that track your location, Android does so. It then will upload that information to Google to store in your Google account. The company uses that data to send you personalized maps and recommendations – and probably for targeted ads, too.</p><p id="af63420c-c9c4-4df5-a355-12f14ae9fb52" class="">If you don’t like the idea of Google keeping a record of everywhere you go, at the very least you will want to shut down <em>Google Location History</em>. Location History is a timeline that shows everywhere you have been with your device.</p><p id="1af5a4c1-1cbe-4e05-9ffe-3fec797df28a" class="">Note that <em>Location History</em> access to your position is independent of the Location permissions we worked with in the <em>Permission manager</em>.</p><p id="e3e79d6b-d3ab-4d7d-b1fa-8404dfc314e2" class="">By <strong>pausing Location History</strong>, we can <strong>stop Google from tracking us as we move about</strong>. This won’t keep apps from using location information from your device (there are other options for controlling that), but it will stop Google from filling up up their databases with a detailed profile of where we go in our day-to-day lives.</p><p id="19e2d045-0514-410b-8a2a-b2ee4287a738" class="">To pause Location History, follow these steps:</p><p id="b89a4cd5-563c-4bae-9707-990841ebf023" class="">1. Go to the <em>Privacy</em> settings, then tap <strong>Google location history</strong>. This takes you to the <em>Location History</em> page of your Google account.
+2. Ensure that <strong>Location History</strong> is paused, as shown here.</p><figure id="bc03f990-1498-4d26-80d9-8940e7e1eafc" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-location-privacy-.jpg"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-location-privacy-.jpg"/></a></figure><h3 id="0696f490-d929-4617-a612-d29f58a543c4" class="">Reduce snooping with Activity Controls</h3><p id="2d07da9d-dfdf-49b3-aa44-5669567bad79" class="">Next up is <em>Activity Controls</em>. For anyone who wants to protect their online privacy, the intro to this section of <em>Privacy</em> settings is scary indeed:</p><blockquote id="48bd8f6c-86b0-49c5-863f-2205204a059a" class="">The data saved in your account helps give you more personalized experiences across all Google services.</blockquote><p id="de5f02f7-84a9-480d-b2e2-d25ad623cdf9" class="">In other words, <strong>Google tracks everything you do</strong>, and uses that data to predict what you will do next, influence what you think and do, and <strong>serve you targeted ads</strong> that are designed to convince you to buy stuff.</p><p id="d82beec2-049b-4585-91dd-be7a45477b51" class="">Let’s turn all this off now:</p><p id="5fd019bb-1108-49a2-8aa6-54d63debbd7a" class="">1. Go to the <em>Privacy</em> settings, then tap <strong>Activity Controls</strong>. You’ll see a screen full of the kinds of things that Google tracks, along with a pitch on why them tracking this information is good for you.
+2. Turn off <strong>Web &amp; App Activity</strong>. Google will give you a long message trying to convince you to let them keep tracking you. You should be aware that doing this doesn’t actually put an end to Google collecting this data. It only pauses the collection.
+3. You should also know that doing this <strong>will not delete all the data Google has already collected</strong> on you. To delete the data Google has already collected in the <em>Web &amp; App Activity</em> category you need to go to <strong>myactivity.google.com</strong>.
+4. Now go back to the <em>Activity Controls</em> screen and do the same process to pause <strong>Location History</strong>.
+5. Repeat for <strong>YouTube History</strong>.</p><p id="bed04fca-8c7b-411a-b1c3-03243417b1e9" class="">Ignore the bit about Ad personalization that may appear next on <em>Activity Controls</em>. We will deal with that in a moment in another area.</p><h3 id="ab6b0d8b-bb44-48e9-b324-d1aad7317010" class="">Put an end to Ad personalization</h3><p id="082b5999-ac43-4c30-9aa6-6c7f301652ab" class="">Google uses data it collects about you to offer personalized ads. Part of this is assigning you a personal <strong>advertising ID</strong> that they use to accumulate data about you. We can turn that off too. At least, tell apps not to use that ID to build profiles or show you personalized ads.</p><p id="67b47f62-f920-4bd1-8e0e-ef7749f98dc9" class="">1. Go to the <em>Privacy</em> settings, then tap <strong>Ads</strong>.
+2. In the screen that appears be careful to turn <strong>On</strong> the slider to Opt out of Ads Personalization. If you leave the slider in the Off position you are telling Google to continue to apply Ads personalization.</p><p id="19aed82b-754d-40ab-bf23-e0197b6ca9fd" class="">Note: If you disable Ads personalization you will still be forced to see ads (we will fix that later) but they won’t be customized for maximum impact on you. In addition, if you clear your cache, it will automatically turn Ads personalization back on.</p><h3 id="c638922b-0a8d-4abe-a799-d7a8cdce3eea" class="">Usage &amp; diagnostics</h3><p id="f50131de-778f-43fa-94e8-db0b6463c393" class="">This setting tries to get you to share even more data with Google to help improve your Android experience. We suggest you turn this off too.</p><p id="88d681a5-4c21-46e0-936a-9e932ff2d59c" class="">1. Go to the <em>Privacy</em> settings, then tap <strong>Usage &amp; diagnostics</strong>. You’ll see a screen full of reasons why you should allow Google to collect this data. Just turn it <strong>Off</strong>.</p><h2 id="ce0b6209-761b-4f8d-b012-e0ada61bc83e" class="">3. Eliminate excess</h2><p id="ba06283c-d34d-4c95-b461-7c2eba8b72c9" class="">Sometimes the problem isn’t that you have or do something; it is having or doing too much. In this section we will cover three things that you can have in excess on your Android device. The first is excess apps.</p><h3 id="339c00f6-45d4-4e2d-ac4e-7d31c648f681" class="">Delete excess apps from your device</h3><p id="3241bd0d-6c3d-4465-b184-e60b3732c11f" class="">We need to install apps to make our Android devices useful. However, we often end up with apps on our devices that we seldom (or never) use, and don’t really need. The problem isn’t that these apps use up too much space, or slow down your device. Modern devices have lots of memory and processing power to support all these apps.</p><p id="ff50c5bd-5925-47fd-89e8-6ad240692abe" class="">The problem is that <strong>every app that exists on your device is a potential privacy and security problem</strong>. In the last section we talked about how Google automatically grants every app permission to use the Internet. This means that every single app on your device has the potential to:</p><ul id="1d5530bc-f01f-4433-a5f0-6b2a886d0497" class="bulleted-list"><li style="list-style-type:disc">Send any data it can get its hands on to points unknown somewhere on the Internet</li></ul><ul id="3f435788-5b4a-4cc4-a376-6e647d6711ee" class="bulleted-list"><li style="list-style-type:disc">Receive “stuff” from the outside world that could affect your device</li></ul><p id="db79fc98-e078-49cd-b6ae-342f8d222ee4" class="">Think back to the flashlight apps that want access to your contacts as an example. It is hard to see why a flashlight app would need access to your contacts. But combine that with automatic Internet access, and things start to make sense. Your contact list is valuable, and can be sold without your knowledge to advertisers, or otherwise misused.</p><p id="0fe6f47e-8b20-4070-b375-f7cb46c41718" class="">You get the point. You can improve the security and privacy of any Android device by <strong>removing any app that you don’t absolutely need</strong>.</p><p id="fe8c7da0-15e2-4606-a63b-9163a40a4cbb" class="">Here’s how to remove those excess apps:</p><p id="379da0d3-1255-4260-b158-58f10bc9654f" class="">1. Tap <strong>Settings</strong>, then <strong>Apps</strong>. You should see a list of the apps on your device.
+2. Tap an app you don’t absolutely need to have on your device. You’ll see something like this:
+3. Tap <strong>Uninstall</strong>. Android will pop up a message asking you to confirm that you want to uninstall the app.
+4. Tap <strong>OK</strong> to uninstall the app.
+5. Repeat for each app you can live without.</p><figure id="85c460e0-2b78-4b37-9b26-627dff0ec392" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-apps-privacy-data-collection-.jpg"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-apps-privacy-data-collection-.jpg"/></a></figure><h3 id="267be98a-6243-4491-81d6-6ff596f8cad5" class="">Deny apps excess permissions</h3><p id="66bbbbb9-a9a3-4570-bcbb-aab3bc497704" class="">Once you reduced the number of apps on your device to the <strong>absolute minimum</strong>, it is time to use the Permission manager (if you haven’t already done so) to ensure that the apps that remain on your device only have the permissions they actually need to do their jobs.</p><h3 id="beadb372-199a-49fe-bb39-87220883c8f6" class="">End excess cloud syncing</h3><p id="a73ca3a8-cfb7-4cd4-95d2-f36890e46663" class="">More and more apps now offer the ability to sync their data to the cloud. This can be useful, particularly for messaging apps (which tend to generate a lot of data over time) and for apps that store important data (like your contacts or credit card information). However, <strong>data you sync to cloud storage is a target for hackers</strong>. And any data synced to cloud storage by the default Google apps is likely to be read and analyzed by Google.</p><p id="b6eb024e-e192-45fb-af1c-d414611fb1bd" class="">As with excess apps, and excess app permissions, it is best to <strong>cut cloud syncing to the absolute minimum</strong>. Only let an app sync to cloud storage if it is absolutely critical to you that the data gets stored up there. Here’s how you disable cloud sync for apps that don’t require it:</p><p id="c3373073-93ad-465f-af7b-89af51d9c8bf" class="">1. Tap <strong>Settings</strong>, then <strong>Accounts </strong>(this may also be called <strong>Accounts &amp; backup</strong> or something similar). You should see a screen something like this one:
+2. Tap <strong>Accounts</strong> to see a list of the apps that are currently syncing data to cloud storage for one purpose or other.
+3. Scroll to the bottom of the screen to see the <em>Auto sync data</em> slider. Turn this <strong>Off</strong> to prevent any app from syncing automatically.
+4. Alternately, you can tap individual apps to turn cloud sync on or off for that specific app.
+5. Go back to the Accounts and backup screen. Some devices will have backup and restore options here. These control whether and where general data from your device is backed up. Allowing this to happen can be helpful in case of problems, but remember that any data stored in the cloud this way (by default Google or device manufacturer apps) is a potential security and privacy problem.</p><figure id="8e3b7e96-62a1-4997-a281-65853025b16b" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-storage-security-.jpg"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-storage-security-.jpg"/></a></figure><p id="913e1ef5-f3b2-4113-8e35-26e29936d54f" class=""><strong>Note</strong>: There are many privacy-focused cloud storage options, such as <a href="https://restoreprivacy.com/tresorit/">Tresorit</a> and <a href="https://restoreprivacy.com/sync-com/">Sync.com</a>. This will offer more privacy and control over your data than Google Drive. Check out our <a href="https://restoreprivacy.com/best-cloud-storage/">best cloud storage</a> guide for the latest recommendations.</p><h2 id="7af73753-ec39-4492-b849-631976826a48" class="">4. Install security apps</h2><p id="b77e4743-e9a8-4e13-a599-c39ac51bf7bd" class="">If your Android device doesn’t already have security apps of some kind installed on it, you really should consider installing them now. Android viruses and <a href="https://en.wikipedia.org/wiki/Spyware">spyware</a> are a growing problem, but one that is easy to protect against.</p><p id="91d70569-a23c-44a3-824b-6a55277ce9d3" class="">But before you go looking for security apps, realize that your device may already be protected. First off, <a href="https://www.android.com/play-protect/"><em>Google Play Protect</em></a> is a Google Play store feature that automatically scans your apps and your device for problems. It will notify you if it finds anything. Unfortunately, relying solely on Play Protect isn’t enough.</p><p id="a02ee6a4-6225-4d18-9c5a-6045b9931d34" class="">One reason you don’t want to rely solely on Play Protect is that it is a Google product. That means it will protect you against any threats, except Google itself. Remember that Google wants to collect every bit of information about you that it possibly can. Expecting Google Play Protect to protect you against Google is like expecting a fox to guard the henhouse.</p><p id="0cbe53fa-7aa3-4981-94c8-45972ee47004" class="">Second, you may someday want to install apps on your device that do not come from the Google Play store. Google Play Protect is unlikely to protect apps that didn’t come from its store.</p><p id="a1a690a5-de1f-4a90-8142-3e3034740388" class="">Leaving aside Play Protect, some device vendors ship their products with antivirus/anti-malware apps already installed. My Samsung phone came with a security app from McAfee pre-installed.</p><p id="53ee0032-baee-4ece-b688-35619ac713e8" class="">But if your device doesn’t have any security apps installed, you may want to install one. There are free apps out there, but it is hard to know whether you can trust them or not. As Sven explained last year in the <a href="https://restoreprivacy.com/antivirus-privacy/">Antivirus privacy</a> guide,</p><blockquote id="09cb0ef9-b90e-46c2-83c0-c16f75d51acc" class="">Many antivirus products behave in a way that infringes on users’ privacy. Whether they intercept web traffic, sell browser history data, or allow backdoor access to government agencies, many antivirus products are guilty of jeopardizing the very thing they are designed to protect: your data.</blockquote><p id="1157e5e1-3db9-4972-9022-05c7d58f22f0" class="">Generally speaking, we don’t devote much time to testing antivirus/anti-malware apps as we are mainly focused on privacy tools. However, one option that has performed well in third-party testing and also respects your privacy is <strong>Emsisoft</strong>. Emsisoft offers a <a href="https://restoreprivacy.com/go/emsisoft">lightweight Android antivirus solution</a> called “Emsisoft Mobile Security”.</p><h2 id="305e7c2f-de92-43dc-9c18-c76dc8017c27" class="">5. Make privacy-friendly apps your default apps</h2><p id="beea35ac-0e2c-4cd0-8287-bf878004b813" class="">Android has a few default apps. These are apps that, for example, open automatically when you click a link on a page. There aren’t many such apps, but you can easily replace them if you wish. Here are instructions on how to do that.</p><p id="083e0d6a-302a-4898-83f3-8318ba2f52e9" class="">While you can change any of the default apps, the most important one to change is the default <em>Browser app</em>. Google’s browsers are fast and work on virtually any site. Unfortunately, they also report everything you do directly to Google.</p><p id="ac170495-e978-4c02-823d-2ec32514d383" class="">We suggest that you check out this review of <a href="https://restoreprivacy.com/secure-browser/">Private and Secure Browsers</a> and choose a new one to become your default browser app. Once you’ve made your decision, and installed your preferred browser app on your device, follow these steps to replace the default Browser app with a new, privacy-friendly one:</p><p id="1b1126d0-816a-44c1-9c6d-301abed7da23" class="">1. Tap <strong>Settings</strong>, then <strong>Apps</strong>.
+2. On the Apps screen, tap the three-dot menu on the top right.
+3. In the menu that appears, tap <strong>Default Apps</strong>. You’ll see a handful of default apps on the page that appears.
+4. Tap <strong>Browser app</strong>. Android will display a list of the browser apps you have installed on your device.
+5. Tap the browser you want to use as the default (Brave in this case). That’s it!</p><figure id="35d6e50f-16d5-4362-8b51-4368b040797a" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-apps-3dot-menu-300x83.png"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-apps-3dot-menu-300x83.png"/></a></figure><figure id="50622f96-7c34-4087-a9b7-001cfa029769" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-choose-a-default-browser-287x300.png"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-choose-a-default-browser-287x300.png"/></a></figure><h3 id="c6a8bd87-cc9d-4691-990c-36c4592842e3" class="">Block ads, tracking, and malware</h3><p id="b46db093-2546-414e-ba8f-05600457111a" class="">Once you have a new web browser installed and set as the default app, consider powering it up a bit. There are a few <strong>browser extensions or add-ons</strong> that can help shield your Android device from ads, tracking software, malware, and <a href="https://en.wikipedia.org/wiki/Malvertising">malvertising</a>. In addition, some browsers now have protection against some of these problems built right into the app. The options you will have available depend on the browser app you choose. <em>Firefox</em>, for example, has protection against trackers built in. And <a href="https://addons.mozilla.org/en-US/android/addon/ublock-origin/">uBlock Origin</a> is a Firefox add-on that can block a wide range of ads as well as malware domains.</p><p id="c2e5b7af-fb24-46f8-8b02-d598b512b8fd" class="">Note: We also have a guide on how to <a href="https://restoreprivacy.com/firefox-privacy/">modify Firefox for more privacy</a>.</p><p id="2373c2f8-e93e-48cc-95bb-8b0d3bb5da5f" class="">Take advantage of the built-in settings and available add-ons for whichever browser you decide to use, and browse more safely and securely.</p><h3 id="3ecdfa4f-145a-4e01-b185-04595f45f9f6" class="">Download apps from safe sources</h3><p id="c88b25d7-e50b-4cde-93f8-93faa36f0c6a" class="">From time to time, you may be exposed to interesting-looking apps that do not come from the Google Play store or your device manufacturer’s app store. Downloading apps from such sources is almost always a bad idea. Google and the device manufacturers try to keep their stores clean. That is, they do what they can to weed out third-party apps that are malware or spyware. They <a href="https://www.cnet.com/news/more-than-1000-android-apps-harvest-your-data-even-after-you-deny-permissions/">may not be very good at it</a>, but they apparently try.</p><p id="c139f8b6-14bd-4229-b6a9-0e8450ca272c" class="">Sources beyond these can be very risky. Even with the best intentions, they generally don’t have the resources to keep bad apps at bay. With one major exception: F-Droid.</p><h3 id="a5b4b192-174e-40a7-bc09-739fb27a03ff" class="">F-Droid for Android apps</h3><p id="bf177d46-a912-4dad-871b-c14eaa4e5972" class="">What is <a href="https://f-droid.org/">F-Droid</a>? Here’s how they describe themselves:</p><blockquote id="55b168e1-b981-4a47-bb0c-bbe59b453fa0" class="">F-Droid is an installable catalogue of FOSS (Free and Open Source Software) applications for the Android platform. The client makes it easy to browse, install, and keep track of updates on your device.</blockquote><p id="3df9d286-3c08-40db-ab4c-14e4018f6e3d" class="">In other words, it is an alternative to the Google Play store that is a trusted source for Android apps, many of which do not send any data whatsoever to Google or Facebook. As Cnet.com put it, “F-Droid is among the most scrutinized Play store alternatives we can advise.”</p><p id="e832acf0-1250-48a1-a056-b73d2e08a619" class="">F-Droid has a good collection of apps, but is not meant for beginners. We recommend you investigate its offerings only after you have completed all the security and privacy steps in this guide, and are willing to venture outside the mainstream. Some of the privacy-focused services we have reviewed offer their apps in F-Droid, for example with <a href="https://restoreprivacy.com/tutanota/">Tutanota</a>, a secure email service in Germany.</p><h2 id="9363049a-11e7-49a0-bb0a-f4fc634b32bd" class="">6. Maintain security by doing these things</h2><p id="5330902f-6aac-4fa4-a5eb-81d7cd1cd06d" class="">By now, you’ve done a great job of securing your Android device. Here are some things you can do to keep it secure.</p><h3 id="691af1cd-16a0-4bba-90c4-1c8db80ca5f6" class="">Keep notifications off the lock screen</h3><p id="d29856e3-65c9-474a-bd57-a3051a4f160a" class="">The lock screen protects your device from snoops, since they need to know how to unlock it to do anything sneaky. However, Android can display app notifications on the lock screen. This is a convenience feature, as it lets you see important notifications at a glance, without having to unlock your device.</p><p id="fa614f6d-6ac9-4fdd-9b05-58f5f6aa46e3" class="">Unfortunately, anyone who happens to be looking can also see those notifications, even though your device is locked. Needless to say, this could turn into a real privacy issue.</p><p id="54e288b9-93b0-43fd-9704-75664c763cd0" class="">Follow these steps to make sure that no notifications appear on the lock screen. The step-by-step instructions that follow are for my Samsung device running Android 10. The settings may appear in different locations on different devices.</p><p id="437ae305-0c55-4a33-a26b-84ac447a357e" class="">1. Tap <strong>Settings</strong>, then <strong>Lock screen</strong>.
+2. Scroll down the <em>Lock screen</em> screen to <em>Notifications</em> and set the slider to <strong>Off</strong>. You should see a new screen similar to this one:
+3. There are a lot of options for exactly how notifications will be displayed on the lock screen, but you don’t need to worry about them. Just use the slider at the top of the screen to turn them <strong>Off</strong> altogether.</p><figure id="d9c9d0b9-8494-4f19-8a9c-a1b10d9780f8" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-notifications-privacy-.jpg"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-notifications-privacy-.jpg"/></a></figure><p id="f6082dfa-cfe1-4d54-8b05-d509a113d5d4" class=""><strong>Note:</strong> You will want to confirm that lock screen notifications are still turned off any time you make any changes to the lock screen, just in case.</p><h3 id="30eb8c00-156d-4a26-9e2e-a3b5678e6ba0" class="">Minimize the number of new apps you install</h3><p id="46e99e4e-a923-40c6-96f1-1d03491f2412" class="">This is a tough one. Now that you’ve spent some time eliminating excess apps, you have to avoid loading up all that space you freed up with a metric ton of new apps. Remember that every app on your device is a potential security and privacy problem.</p><h3 id="2a4284e0-bd23-44f6-aa56-c3443b90deb5" class="">Check app permissions before installing</h3><p id="25558131-5f58-424f-bf5c-7f33a24f9011" class="">If you do decide to install a new app, one of the first steps you take should be to check the permissions it requires. You don’t want to put find yourself in a position analogous to those people who installed flashlight apps that sent their contact info to some hacker in Uzbekistan. It is easy to check the permissions on an app from the Google Play store before downloading it. Here’s how:</p><p id="ffd40b6e-f617-4c67-9629-98f830f92111" class="">1. Find the app you are interested in on Google Play.
+2. Scroll down the page, past the reviews to the <em>Additional Information</em> section.
+3. Under <em>Permissions</em>, tap <strong>View Details</strong>. Google Play will list all the permissions requested by the app:
+4. Review the permissions the app wants and be sure you are comfortable with them. If not, choose a similar app that doesn’t ask for the permissions you do not want to grant.</p><figure id="b2c1b626-aa86-4f4e-b416-3130372cb851" class="image"><a href="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-app-permissions.png"><img src="https://cdn-resprivacy.pressidium.com/wp-content/uploads/2020/05/android-app-permissions.png"/></a></figure><h3 id="c0130468-aa30-4538-8970-974ff9ba687d" class="">Update your software</h3><p id="b81fe899-e6bc-4c11-b82a-e94b1f464a1b" class="">Are you ever in a hurry to do something and decide to ignore Android’s request to do an update? Most of us do at one time or another.</p><p id="03f85996-5d6a-41b9-a5aa-b5eaaf4c9c61" class="">However, this is a bad idea. Much of the endless stream of updates that hit our devices are security updates. If possible, just bite the bullet and update your device whenever it asks.</p><h3 id="63040a3c-a191-40fb-a6e1-02f6914e8ce0" class="">Stay out of bad neighborhoods</h3><p id="701c6895-8bf4-449d-b24c-e9ebaf02daba" class="">If you ever spent time in a big city, you were probably warned about certain “bad neighborhoods” that weren’t safe to enter. There are unsafe neighborhoods online too. While you won’t physically enter such neighborhoods, browsing them with your Android device is the online equivalent thereof.</p><p id="55322230-6be2-4d6a-9e9a-66be31e5ef38" class="">Even if you’ve got the latest in antivirus software installed on your device, and it is locked down tight as a drum, hitting sketchy sites or the dark web could put your data at risk. Think about it this way. There is an ongoing war between the bad guys who want to steal your data or sabotage your device, and the good guys who protect your stuff.</p><p id="6b818fd4-2415-4cc7-b13e-796b10835aad" class="">The problem is that the bad guys are on the attack, and they make money exploiting people. They have an inherent advantage. If some creep figures out a new way to hack into your device there will probably be a period of time before someone develops a way to counter the new hack. If your device happens to get attacked during that vulnerable time, you are in trouble.</p><p id="c4dded8c-bb75-4157-b2da-9b58c9eb80e3" class="">The best way to avoid this kind of tragedy is to avoid the bad neighborhoods online and <strong>use common sense</strong>.</p><h3 id="f553949b-c6d8-4a1c-adca-fdb58c7e60eb" class="">Use a good VPN service on Android</h3><p id="4e88369a-c30b-41af-a46e-8443d256b704" class="">A good VPN (virtual private network) is essential for Android privacy, security, and also unblocking websites. There are many reasons to use a VPN, as we’ve discussed in the ‘<a href="https://restoreprivacy.com/what-is-vpn/">What is a VPN</a>‘ guide. But here are three main factors explaining the growing popularity of VPN services:</p><ul id="a20140da-dfda-44f6-9ddb-ff22e760fef4" class="bulleted-list"><li style="list-style-type:disc"><strong>Internet providers</strong> are <strong>collecting your browsing data</strong> and handing this over to third parties (but a VPN will encrypt and conceal your activities). This is happening right now in the US, UK, Australia, and much of Europe.</li></ul><ul id="d1b1b460-5d6f-49b4-89c7-d278323e4ebb" class="bulleted-list"><li style="list-style-type:disc"><strong>Public WiFi</strong> remains a <strong>serious threat</strong> with hackers targeting unsuspecting WiFi users with devices <a href="https://www.vice.com/en_us/article/pa39xv/pineapple-wifi-how-to-mitm-hack">like this</a>. (A VPN encrypts your connection and makes your data unreadable.)</li></ul><ul id="3284948d-eec7-47c9-8dbc-3df9263d6827" class="bulleted-list"><li style="list-style-type:disc">Many streaming services and websites restrict content to certain geographic locations. A VPN allows you to easily <strong>access your favorite content and bypass restrictions</strong>.</li></ul><p id="1981c96d-872d-4f6c-891e-d0a81fc79e90" class="">We just released a roundup guide of the <a href="https://restoreprivacy.com/best-android-vpn/">best VPNs for Android</a> based on our own testing. Some of our favorites include <a href="https://restoreprivacy.com/nordvpn/">NordVPN</a>, which just x WireGuard support for Android, and <a href="https://restoreprivacy.com/expressvpn/">ExpressVPN</a>, which has excellent performance, security, and support for streaming.</p><h3 id="dafc6b31-9f48-4abb-8c7c-820f5dcf9a3b" class="">Use a secure messaging service</h3><p id="1a43457b-536d-4399-ae47-7f859ea0ed62" class="">A secure messaging service, or secure messenger, is a critical tool for private and secure communications. In most countries, it is safe to assume that Telecoms (and their <a href="https://en.wikipedia.org/wiki/PRISM_(surveillance_program)">spy partners</a>) are recording all SMS message traffic. But don’t use any random messaging service. WhatsApp is now owned by Facebook, a notorious abuser of privacy and collector of private information.</p><p id="44ee50bc-b018-453d-af92-fbcdfbbfeca6" class="">Instead of regular SMS messages or WhatsApp, consider using one of these secure messenger services:</p><ul id="01e35ba2-ba92-4b09-bfa5-39959936fff8" class="bulleted-list"><li style="list-style-type:disc"><a href="https://restoreprivacy.com/signal-messenger/">Signal</a></li></ul><ul id="68d84ad6-dec2-49ca-8f3a-639b0b6443c4" class="bulleted-list"><li style="list-style-type:disc"><a href="https://restoreprivacy.com/session-messenger/">Session</a></li></ul><ul id="257082f8-1189-488a-89d5-16bdfd6a480d" class="bulleted-list"><li style="list-style-type:disc"><a href="https://restoreprivacy.com/wickr-messenger/">Wickr Me</a></li></ul><ul id="f673bf38-64da-46e8-9ba5-788ada0c9898" class="bulleted-list"><li style="list-style-type:disc"><a href="https://restoreprivacy.com/wire-messenger/">Wire</a></li></ul><h2 id="b2fd2fc9-192b-4a46-88de-609bf3cf0bb4" class="">Replace the stock version of Android with one that doesn’t report everything you do to Google</h2><p id="119abfdb-c5e9-4ed1-a0df-9cc3301f56ab" class="">For the ultimate in Android security and privacy, you could abandon Android altogether.</p><p id="aba73fa2-d7d9-4d9d-8400-f5745fff1196" class="">Android itself is an open source project. That means that other people can use the base Android code and create their own version of the operating system. The biggest benefit of doing that from our perspective is that the developers can modify the code to eliminate the bits that send your data to Google. Switching to an alternative Android distribution is not for the faint of heart, but it is the best way we know of to secure your Android data.</p><p id="6ec75766-1ca7-4170-8a93-5372d7f14e38" class="">To learn more about the leading alternative Android distribution, check out <a href="https://lineageos.org/">LineageOS</a>.</p><p id="f5bdcf91-f413-4834-bad7-262da8f9b1d7" class="">Note: Check out our <a href="https://restoreprivacy.com/google-alternatives/">Alternatives to Google Products</a> guide for more options.</p></div></article></body></html>

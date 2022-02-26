@@ -1,0 +1,657 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>iOS Security</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+}
+
+.simple-table-header {
+	background: rgb(247, 246, 243);
+	color: black;
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="28c9778c-3b09-4af4-8536-6d5a29d46a9f" class="page sans"><header><h1 class="page-title">iOS Security</h1></header><div class="page-body"><h3 id="efa59334-fd03-428f-986b-26f19fcb0e2d" class=""><strong>1.) Update the operating system to the latest version</strong></h3><p id="53c3ddca-6d78-40f8-a300-0fd37d73dea0" class="">Apple devices ship with the most current version of the operating system available when the device was manufactured, but new updates often address security vulnerabilities in addition to bug fixes and adding new features. Not all devices will support the most recent version of iOS. Upgrade to the latest supported version for your device. Instructions for updating iOS devices are at <a href="http://support.apple.com/kb/HT4623">http://support.apple.com/kb/HT4623</a>.</p><h3 id="e873d621-900a-4247-992a-8c5cfe84d0ab" class=""><strong>2.) Enable Automatic Downloads of App Updates</strong></h3><p id="a64aba79-1ecd-402a-ae55-826ef772e735" class="">Application updates often address security vulnerabilities in addition to bug fixes and adding new features. It is recommended that applications, especially those used to interact with The internet and web-based services (e.g. Internet browsers) be updated frequently. This feature will automatically download and install application updates when they become available. <strong>Enable Automatic Downloads of App Updates</strong></p><p id="e2ddaebe-7c80-409d-b8ee-ba76625867c5" class="">To enable:</p><ol type="1" id="3c780804-0aa2-4024-b3fb-8f55e28eb057" class="numbered-list" start="1"><li>Tap Settings.</li></ol><ol type="1" id="9223bbf2-daa1-4bac-8932-492833a595c0" class="numbered-list" start="2"><li>Tap iTunes &amp; App Store.</li></ol><ol type="1" id="e76431a7-7fd9-4ace-900d-633a07196923" class="numbered-list" start="3"><li>Turn on Updates in the Automatic Downloads configuration list.</li></ol><h3 id="aac49dcc-983d-4151-875b-891c733c24e0" class=""><strong>3.) Turn off Ask to Join Networks</strong></h3><p id="498b7590-2e5e-49e0-b984-41d9ffb0fed0" class="">By default, iOS devices will prompt you to join an unknown network, if any are detected, when no networks that have previously been connected to are available. The issue is that anyone can run a wireless hotspot and, joining a poorly configured or insecure network could allow a malicious user on that same network to intercept, capture, and alter any network traffic sent by a user. In fact, many attackers will intentionally run wireless networks in popular, crowded areas, like airports and coffee shops, hoping to lure unsuspecting users into connecting. If this feature is disabled, you must manually select a wireless network to join from a list of detected available networks. This may reduce the risk of inadvertently joining a similarly named yet untrusted network (e.g. “defualt” instead of “default”).</p><p id="a8591426-07bf-4d7b-bdc0-ce1c92d21b38" class="">To disable Ask to Join Networks:</p><ol type="1" id="1864b0c2-fb00-42d8-86ee-37f220440f98" class="numbered-list" start="1"><li>Tap Settings.</li></ol><ol type="1" id="256ef91b-433b-4872-9227-8469b3bcaf08" class="numbered-list" start="2"><li>Tap Wi-Fi.</li></ol><ol type="1" id="87c49bde-a64c-4ee8-aed9-7875890afb84" class="numbered-list" start="3"><li>Turn off “Ask to Join Networks”.</li></ol><h3 id="940492c2-2a74-43f6-b040-48a0d5328b35" class=""><strong>4.) Enable Data Protection</strong></h3><p id="81d802f1-7d73-4a6a-b940-59b423d7a590" class="">With devices that support hardware encryption (iPhone 3GS and later, iPod Touch 3rd gen and later, and all iPads), iOS 4 and above allow applications to use an encryption key derived from your passcode to protect application data.  Enabling this feature is as simple as setting a passcode on the device.</p><p id="441006bf-5c75-482e-9833-8a54f5c2bfd6" class="">To verify that data protection is enabled:</p><ol type="1" id="ddf6e29b-2cb6-4bf3-a2a4-818560a83b4b" class="numbered-list" start="1"><li>Tap Settings.</li></ol><ol type="1" id="29e266a7-1c60-4745-9ac6-fd036497e05c" class="numbered-list" start="2"><li>Tap General.</li></ol><ol type="1" id="1cd3caf5-aa4c-4e02-8111-1fed8c9cf985" class="numbered-list" start="3"><li>Tap Passcode.</li></ol><ol type="1" id="ac7a8e2d-0789-4777-8b69-c722f62fe6db" class="numbered-list" start="4"><li>&quot;Data protection is enabled&quot; should be displayed at the bottom of the screen.</li></ol><h3 id="b75cdad6-966c-432b-a67f-1746dc76d4b2" class=""><strong>5.) Erase data upon excessive passcode failures</strong></h3><p id="f063d618-6457-4c5e-be80-541d72f64f17" class="">Devices can be configured to automatically erase user settings and data after ten passcode failures.  As excessive passcode failures typically indicate the device is out of your physical control, enabling this may protect the confidentiality of information stored on the device.</p><p id="53e67070-bd74-4b0a-bdfa-c3f6c816e673" class="">To enable this option:</p><ol type="1" id="92b15907-5842-490c-a745-9143ace2ab19" class="numbered-list" start="1"><li>Tap Settings.</li></ol><ol type="1" id="e4d71613-b95a-475b-8bf6-8372f7b174c9" class="numbered-list" start="2"><li>Tap General.</li></ol><ol type="1" id="02a0f805-9500-4eac-b503-d33ad3eceda8" class="numbered-list" start="3"><li>Tap Passcode Lock.</li></ol><ol type="1" id="794b26e3-5da5-46bc-aa2a-e82f4aead643" class="numbered-list" start="4"><li>Enter the current passcode when prompted and tap Done.</li></ol><ol type="1" id="ff320bbe-6684-4488-b45e-d71b8cabd447" class="numbered-list" start="5"><li>Turn on Erase Data.</li></ol><ol type="1" id="f6306944-8ef6-4399-abf5-5a6e71592412" class="numbered-list" start="6"><li>Tap Enable.</li></ol><h3 id="48ef0ee6-03a6-4ea7-9e11-0a78938e3a54" class=""><strong>6.) Enable remote wipe functionality</strong></h3><p id="e6782a14-dfe0-4a7b-b7be-34dd819a8c48" class="">The intent with this is to ensure that if the device is lost, the data can be erased remotely.  There are number of ways to accomplish this with iOS:</p><p id="bdb7b2a6-c749-4e78-96aa-51923203036b" class=""><a href="http://www.utexas.edu/its/messaging/index.php">Austin Exchange Messaging Service</a> provides this functionality to synchronized devices.  Device wipes can be requested by the Exchange server administrator or initiated by the account holder through <a href="https://wmail.austin.utexas.edu/">Outlook Web Access</a> under <strong>Options &gt; Mobile Devices</strong>.</p><p id="537e6c5c-d7d4-4d5a-99b9-407120971219" class="">Apple&#x27;s <a href="http://www.icloud.com/">iCloud</a> service provides, among other things, the ability to track GPS enabled devices, display messages on the screen, lock a device, and wipe all data.  These features are provided free of charge to owners of iPhone 4 and newer, iPod Touch 4th generation and newer, and all iPad devices, but this does need to be setup on the device in advance (i.e. it can&#x27;t be done after the device is lost). This feature is called Find My iPhone, which is discussed in more detail later.</p><h3 id="5c8ae249-11cd-4e41-b5be-7c07a6bb4ec6" class=""><strong>7.) Erase all data before return, repair, or recycle</strong></h3><p id="9661222a-ddd9-400a-b66b-f7c0226ec6b5" class="">In order to prevent an unauthorized person from being able to recover sensitive information from the device, the disk should be overwritten via the &quot;Erase All Content and Settings&quot; setting before it is out of your physical control. <strong></strong></p><p id="096840ac-6e77-4caa-87c1-dd279cfc0156" class="">To securely erase a device:</p><ol type="1" id="7df30a2e-c569-4879-8d39-098d5c1d8941" class="numbered-list" start="1"><li>Tap Settings.</li></ol><ol type="1" id="2af6d556-08fb-47ae-abdb-a9436c9b87f9" class="numbered-list" start="2"><li>Tap General.</li></ol><ol type="1" id="192bfd02-57eb-4264-b931-bcb7c2e97e44" class="numbered-list" start="3"><li>Tap Reset.</li></ol><ol type="1" id="f8146a70-f815-486f-a75b-98f312495329" class="numbered-list" start="4"><li>Tap Erase All Contents and Settings.</li></ol><ol type="1" id="fb2a9f04-6c1f-407f-b294-f732499daa4a" class="numbered-list" start="5"><li>If a passcode is configured, enter the passcode when prompted.</li></ol><h3 id="49c0d4c3-6b65-4271-8816-12249be3e4da" class=""><strong>8.) Require a passcode or password</strong></h3><p id="50fc3c49-308a-4977-ac96-9430a793c267" class="">Setting a passcode prevents casual unauthorized access to a device. A passcode is also required in order to enable Data Protection and take full advantage of the encrypted storage of all recent iOS devices.</p><p id="d2c968a3-3fd1-4557-a513-3d7e40d05543" class="">To configure a passcode:</p><ol type="1" id="0469b2bf-f8df-4d9a-a891-e555e3f63ff7" class="numbered-list" start="1"><li>Tap Settings.</li></ol><ol type="1" id="c9b2b575-9836-46c9-86fe-8340c17bfc2a" class="numbered-list" start="2"><li>Tap General.</li></ol><ol type="1" id="e9b00984-8c3a-48c5-bc9d-04aedecc2fac" class="numbered-list" start="3"><li>Tap Passcode Lock.</li></ol><ol type="1" id="a66e692c-c994-44d1-9808-be1c31b95c1f" class="numbered-list" start="4"><li>Tap Turn Passcode On</li></ol><ol type="1" id="626eb9ba-eec3-4233-922a-f0b2e3706e70" class="numbered-list" start="5"><li>Enter a passcode and then tap Next</li></ol><ol type="1" id="e71343cc-43d8-477b-86db-8972f2032017" class="numbered-list" start="6"><li>Enter the same passcode and tap Next again.</li></ol><p id="4a4e9078-b3e6-4671-978b-e7c0ea7b44e7" class="">In addition to the default 4 digit passcode, Apple also supports the use of numeric passcodes greater than 4 digits and regular alphanumeric passwords. There have been examples of brute force attacks against passcodes that bypass the normal user log in mechanisms and attack the keychain directly to prevent data from being erased after 10 invalid attempts (which is the default behavior). Since a 4 digit passcode only has a maximum of 10,000 possible combinations, we recommend that users select a longer passcode or a password when possible. iOS will present the standard numeric keypad for entry regardless of the length of a passcode, so long as the passcode consists only of numbers. For high-security applications, it is recommended that a standard alphanumeric password be used instead of a passcode.</p><p id="8d519131-d596-4818-b568-0fb4b6046f56" class="">To configure a complex passcode or password:</p><ol type="1" id="f7d9f912-a815-4653-836d-ebd1407d59e0" class="numbered-list" start="1"><li>Tap Settings.</li></ol><ol type="1" id="61a8574a-f077-456f-ade0-372ca9f96d2f" class="numbered-list" start="2"><li>Tap General.</li></ol><ol type="1" id="ef0766f4-c394-4016-a7a3-53182bcaa795" class="numbered-list" start="3"><li>Tap Passcode Lock.</li></ol><ol type="1" id="8c76ae6b-36bb-49f5-8b02-88448c532b82" class="numbered-list" start="4"><li>Enter the current passcode if configured.</li></ol><ol type="1" id="832b0f78-92ce-4a1d-8824-cc2f2773e48b" class="numbered-list" start="5"><li>Turn off Simple Passcode.</li></ol><ol type="1" id="6b475b04-ee72-4368-974b-8861b73a39d0" class="numbered-list" start="6"><li>Enter current passcode when prompted.</li></ol><ol type="1" id="3054cb4c-ff8b-4ede-a75b-f4fb31104f5e" class="numbered-list" start="7"><li>Enter a new, longer passcode or a password and tap Next.</li></ol><ol type="1" id="a82534b6-a044-4d96-9de4-2867edaeffe8" class="numbered-list" start="8"><li>Enter the new passcode or password again and tap Next.</li></ol><h3 id="e666efe2-cc99-43cd-98b7-d873c907ae50" class=""><strong>9.) Block cookies on Safari</strong></h3><p id="0a8cef36-5d8d-4a59-ac41-b453356d2033" class="">Third-party cookies are set by websites other than those specifically navigated to by you. These cookies are often used for tracking and may facilitate the identification and behavioral analysis of users for the purposes of advertising. <em>While third party cookies do not represent a specific security threat, they offer no benefit to end-users and help erode online privacy.</em><strong></strong></p><p id="ddc86b57-2b80-4c0e-ad97-7bd54da90ce3" class="">To configure the blocking of third party cookies:</p><ol type="1" id="881e43c2-7a5d-4357-8a32-38b5bc0b2cc0" class="numbered-list" start="1"><li>Tap Settings.</li></ol><ol type="1" id="434cef08-5248-4984-9c16-da30c1161a60" class="numbered-list" start="2"><li>Tap Safari.</li></ol><ol type="1" id="03a98caa-e56f-4158-bfa3-458a8283825d" class="numbered-list" start="3"><li>Tap Block All Cookies.</li></ol><h3 id="f1c3c8e7-15d3-4ae3-bcf0-01bd7a5891c1" class=""><strong>10.) Turn Off Siri</strong></h3><p id="92bc114d-dcff-46f7-b0af-f156dbeacf5c" class="">Apple&#x27;s virtual assistant has always been a privacy nightmare with its ability to track user activity and collect data —-- from device information, location, to information about you and your contacts, and how you interact with them.</p><p id="6ff0bd6c-2617-4d79-aedd-431186ed3ce0" class="">Disabling Siri is the same for all devices and versions of iOS:</p><ol type="1" id="ef6a5076-1377-4d6b-8e38-711776faf4f5" class="numbered-list" start="1"><li>Open the Settings app in iOS and go to “General”</li></ol><ol type="1" id="0ccac104-186f-449e-b9ab-45890a81bbd5" class="numbered-list" start="2"><li>Tap on “Siri” and near the top of the screen, toggle the switch next to “Siri” to the OFF position.</li></ol><ol type="1" id="7e3308e6-3ae7-4315-a218-0e089a7b7052" class="numbered-list" start="3"><li>Confrm that you wish to disable Siri completely by tapping on “Turn Off Siri”</li></ol><ol type="1" id="f5c43e54-fddd-4a33-8bdf-93242e2af20d" class="numbered-list" start="4"><li>Exit out of Settings as usual.</li></ol><h3 id="a7979aeb-52a6-4697-9454-f5b72644e15b" class=""><strong>11. Disable Text Previews on Notifications</strong></h3><p id="6629d978-b8e0-4a04-ac4c-a3e7e113a005" class="">Turning off notification preview will disable intrusive app notifications from popping up on your iPhone&#x27;s lock screen that might contain sensitive information from applications or messages received from contacts.</p><ol type="1" id="0992bde8-6db7-4a97-b464-82cdd7839f80" class="numbered-list" start="1"><li>Open the Settings app.</li></ol><ol type="1" id="11173428-adbb-4c60-8d5f-1bf3d529d694" class="numbered-list" start="2"><li>Tap &quot;Notifications.&quot;</li></ol><ol type="1" id="b7088fd8-31e5-4c5e-ba76-7ce83d91191c" class="numbered-list" start="3"><li>Tap &quot;Show Previews.&quot;</li></ol><ol type="1" id="6846f65b-a245-4d6e-b1c3-8f47c46bc72c" class="numbered-list" start="4"><li>Tap &quot;When Unlocked.&quot;</li></ol></div></article></body></html>

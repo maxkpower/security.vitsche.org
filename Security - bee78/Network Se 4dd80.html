@@ -1,0 +1,659 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Network Security</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+}
+
+.simple-table-header {
+	background: rgb(247, 246, 243);
+	color: black;
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-opaquegray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="4dd80224-c3f7-4d04-b1fe-7a09d2ff2754" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🔌</span></div><h1 class="page-title">Network Security</h1></header><div class="page-body"><h3 id="ad094da3-762f-4a95-8141-dd335c6e60a4" class="">Wifi</h3><p id="9661f8dc-fc4f-4d80-a2fd-6351650e4276" class=""><strong>This guide is for anyone who cannot use a hardwire connection. Do not use Wi-Fi unless you have no other option.</strong></p><ul id="c9881352-9cc6-43ee-ae22-a721ba3fbe91" class="bulleted-list"><li style="list-style-type:disc">do not hide your SSID (see: <a href="https://www.howtogeek.com/howto/28653/debunking-myths-is-hiding-your-wireless-ssid-really-more-secure/">https://www.howtogeek.com/howto/28653/debunking-myths-is-hiding-your-wireless-ssid-really-more-secure/</a>)<ul id="9733e5c3-4c5c-456a-8156-006167ea31a0" class="bulleted-list"><li style="list-style-type:circle">set an innocuous SSID like &quot;family home wifi&quot; and not &quot;bitcoin treasure trove&quot;</li></ul><ul id="1e82a706-de51-4de0-b56a-6ec3295b2b05" class="bulleted-list"><li style="list-style-type:circle">do not use a name that identifies your ISP, like &quot;Comcast Wifi&quot;</li></ul><ul id="f8e0b3cf-7e51-4db7-b794-dbf8ae266273" class="bulleted-list"><li style="list-style-type:circle">only allow certain MAC addresses to connect to your router<ul id="0b623a12-3911-454b-908d-cc04522f9fb5" class="bulleted-list"><li style="list-style-type:square">Linksys - <a href="https://www.linksys.com/us/support-article?articleNum=137274&amp;clickid=zGZ2GG0YPQ0W18QXeqWmb2KAUkjUoBUQfTwvRM0&amp;utm_campaign=Online%20Tracking%20Link&amp;utm_medium=affiliate&amp;utm_source=impactradius">https://www.linksys.com/us/support-article?articleNum=137274&amp;clickid=zGZ2GG0YPQ0W18QXeqWmb2KAUkjUoBUQfTwvRM0&amp;utm_campaign=Online%20Tracking%20Link&amp;utm_medium=affiliate&amp;utm_source=impactradius</a></li></ul><ul id="4f2c4bab-827d-41f1-afa9-9fed5f376421" class="bulleted-list"><li style="list-style-type:square">Netgear - <a href="https://kb.netgear.com/13112/How-to-configure-Access-Control-or-MAC-Filtering-Smart-Wizard-routers">https://kb.netgear.com/13112/How-to-configure-Access-Control-or-MAC-Filtering-Smart-Wizard-routers</a></li></ul></li></ul></li></ul><ul id="cb71f86a-3006-4104-bb52-aa5f8bb5e129" class="bulleted-list"><li style="list-style-type:disc">use a long, unique wifi password</li></ul><ul id="6b9be8a5-314c-44d0-9df8-fdb45a2325a2" class="bulleted-list"><li style="list-style-type:disc">use long, unique router admin username and password</li></ul><ul id="19e8c95b-6f52-4d42-af89-00a39bcfd74d" class="bulleted-list"><li style="list-style-type:disc">don&#x27;t leave default router credentials in place</li></ul><ul id="0424595b-0918-4d00-af9f-e4333c383f43" class="bulleted-list"><li style="list-style-type:disc">update router firmware - consider using another OS like OpenBSD</li></ul><ul id="bdb9982a-3acc-4f4a-9300-7f3284bceae4" class="bulleted-list"><li style="list-style-type:disc">use your own router; don&#x27;t use a router provided by you ISP</li></ul><ul id="944e0719-76be-4933-bcb4-f9189754b2a3" class="bulleted-list"><li style="list-style-type:disc">don&#x27;t use wifi, if possible</li></ul><ul id="7b8c68cd-8fe5-4db5-88c2-ffcd2242ec00" class="bulleted-list"><li style="list-style-type:disc">don&#x27;t log in to your neighbor&#x27;s or other open wifi networks</li></ul><ul id="2a3a6995-0672-41de-a718-540a7cdea9d2" class="bulleted-list"><li style="list-style-type:disc">don&#x27;t automatically join networks</li></ul><ul id="a110fa5a-04a6-4f77-b33e-ccbd409adb83" class="bulleted-list"><li style="list-style-type:disc">don&#x27;t leave credentials on post-it notes attached to your router</li></ul><ul id="1f2b608a-995b-4298-8d8a-7e8467f1989c" class="bulleted-list"><li style="list-style-type:disc">don&#x27;t tell anyone what kind of router you use</li></ul><ul id="a372976b-add1-476d-8b6f-e50f08f602e7" class="bulleted-list"><li style="list-style-type:disc">consider setting up separate networks for guests and work</li></ul><ul id="39893a28-0dee-4376-bd41-5fc82077bf3c" class="bulleted-list"><li style="list-style-type:disc">disable administration via the WAN interface and change the admin password.<ul id="39c6bddc-2f9d-46c7-ad37-2e57c3b661bd" class="bulleted-list"><li style="list-style-type:circle">there are very few people that need to administer via the WAN interface</li></ul><ul id="914e1d56-49ca-4dc2-b6aa-c14d9e85d526" class="bulleted-list"><li style="list-style-type:circle">if the WAN admin option is disabled, you won&#x27;t be able to connect to the admin to even enter the username/password.</li></ul><ul id="40ef83c8-b0b2-4f31-b004-60a16232ca59" class="bulleted-list"><li style="list-style-type:circle">disabling wan stops most attacks but won&#x27;t matter for some routers. Don&#x27;t get those routers</li></ul><ul id="fdc1e813-00f2-425e-83fe-5c98edef7026" class="bulleted-list"><li style="list-style-type:circle">once wan admin is turned off, the next attack vector is from unauthorized users that log in via wireless (if it&#x27;s a wireless router)</li></ul><ul id="d6ef2a60-606d-43f4-afde-1432f529e4e4" class="bulleted-list"><li style="list-style-type:circle">just changing the password won&#x27;t necessarily help. There could be bugs that allow you to bypass the authentication</li></ul></li></ul><ul id="26b87a9a-0e8a-45b5-bbc1-740346988e4d" class="bulleted-list"><li style="list-style-type:disc">disable wan pinging if that&#x27;s an option</li></ul><ul id="6a575c8b-c72e-4771-8da4-28e4a80fa5c3" class="bulleted-list"><li style="list-style-type:disc">don&#x27;t set up a dmz/direct ip:ip mapping. forward a few ports at most. that&#x27;s usually all you need</li></ul><ul id="83473d4f-78a8-4972-8616-3777672d17d8" class="bulleted-list"><li style="list-style-type:disc">remove /&quot;forget&quot; old wifi networks after they are no longer being used because you will expose your presence to those networks by automatically trying to connect every time you are within range.  CIA&#x27;s &quot;ELSA&quot; uses wifi networks to geolocate targets:  <a href="https://www.bleepingcomputer.com/news/security/vault-7-cia-malware-for-tracking-windows-devices-via-wifi-networks/">https://www.bleepingcomputer.com/news/security/vault-7-cia-malware-for-tracking-windows-devices-via-wifi-networks/</a></li></ul><p id="31e3b471-62c0-42a2-8c01-95fffccd2063" class="">
+</p><p id="cfa4b5cb-0a3f-45c8-947f-d69ca56bfa55" class=""><em><strong>MiFi General Guidance for Travelers on the Go with No Access to</strong></em> <em><strong>Hardwire</strong></em></p><ul id="04ef4fdf-a198-4aef-9727-befcc320d632" class="bulleted-list"><li style="list-style-type:disc">Travel with an ethernet cable and adapter appropriate to your computer.</li></ul><ul id="84500d60-42e2-4fe8-8beb-32aef9072b36" class="bulleted-list"><li style="list-style-type:disc">If there is no traditional ethernet available do your best to locate a secure environment that has ethernet available.</li></ul><ul id="4adcf134-4cc2-4159-8513-3c029fed6371" class="bulleted-list"><li style="list-style-type:disc">If one is not available and communication is necessary, and you are utilizing a MiFi, consider the following:<ul id="c6b22431-29da-4475-bdd1-461ccb92fe61" class="bulleted-list"><li style="list-style-type:circle">your MiFi router should have an ethernet port and be able to get a wired 4G connection</li></ul><ul id="36c6b392-8799-40b6-ac53-b50a2a71fb7d" class="bulleted-list"><li style="list-style-type:circle">you should ensure that a VPN is protecting your connection – use a VPN that can be utilized to protect your phone and laptop(s) (NordVPN does this, you may also wish to check out ProtonVPN or another that can do this). Consult with Maximilian Power for questions regarding VPN usage.</li></ul><ul id="2f31a235-ac7e-4450-b878-ef8ceb17ac4f" class="bulleted-list"><li style="list-style-type:circle">do not hide the SSID, but you should certainly change the SSID (see below guidance under <strong>Wifi</strong>)</li></ul><ul id="2513baf8-a4a2-42f5-b589-de9537be906b" class="bulleted-list"><li style="list-style-type:circle">Don&#x27;t assume the connection is protected, and log off the MiFi whenever you are done using it.</li></ul><ul id="bde86774-1b5a-462b-8ccd-952590272a6e" class="bulleted-list"><li style="list-style-type:circle">do not give out credentials / do not share your MiFi with others.</li></ul><ul id="2e1675b6-324c-4d25-8ac6-ea412ae4c0af" class="bulleted-list"><li style="list-style-type:circle">If your phone can run Orbot, use it.</li></ul><ul id="efedc827-33ec-4d43-a682-fd6ce1b2823d" class="bulleted-list"><li style="list-style-type:circle">The above are general recommendations - take them with grains of salt. See additional hardening recommendations below.</li></ul><p id="4e46d57d-19ca-4a05-99fb-08bafd7495b5" class="">
+</p><p id="b00fe7e7-3cc5-48bc-989f-745c765dc2d6" class=""><em><strong>MiFi General Guidance for Travelers on the Go with No Access to</strong></em> <em><strong>Hardwire</strong></em></p><ul id="14efc944-71e8-458c-876d-0558971ae2d8" class="bulleted-list"><li style="list-style-type:circle">Travel with an ethernet cable and adapter appropriate to your computer.</li></ul><ul id="e7a21602-26cd-4074-958b-94119083c7e1" class="bulleted-list"><li style="list-style-type:circle">If there is no traditional ethernet available do your best to locate a secure environment that has ethernet available.</li></ul><ul id="3533c4a4-378c-4c49-9469-f58a4f0cedcb" class="bulleted-list"><li style="list-style-type:circle">If one is not available and communication is necessary, and you are utilizing a MiFi, consider the following:<ul id="d3988793-05b2-4187-8fbe-a01f3a70b33a" class="bulleted-list"><li style="list-style-type:square">your MiFi router should have an ethernet port and be able to get a wired 4G connection</li></ul><ul id="0e8fd6ef-8835-4505-ac38-4e0447c375c9" class="bulleted-list"><li style="list-style-type:square">you should ensure that a VPN is protecting your connection – use a VPN that can be utilized to protect your phone and laptop(s) (NordVPN does this, you may also wish to check out ProtonVPN or another that can do this). Consult with Maximilian Power for questions regarding VPN usage.</li></ul><ul id="24010224-99c4-4f5c-ad20-9352490b1c4d" class="bulleted-list"><li style="list-style-type:square">do not hide the SSID, but you should certainly change the SSID (see below guidance under <strong>Wifi</strong>)</li></ul><ul id="4353e02a-d5b5-49ab-aef2-4acf8a15e40e" class="bulleted-list"><li style="list-style-type:square">Don&#x27;t assume the connection is protected, and log off the MiFi whenever you are done using it.</li></ul><ul id="9c199bc6-1605-4067-8903-edad0493f6bc" class="bulleted-list"><li style="list-style-type:square">do not give out credentials / do not share your MiFi with others.</li></ul><ul id="f4ba7259-3dd1-429a-865e-ef02515221c0" class="bulleted-list"><li style="list-style-type:square">If your phone can run Orbot, use it.</li></ul><ul id="2135e092-76a3-4b97-8635-7807beaec6d3" class="bulleted-list"><li style="list-style-type:square">The above are general recommendations - take them with grains of salt. See additional hardening recommendations below.</li></ul></li></ul></li></ul></div></article></body></html>
